@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>接口测试报告</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      color: #333;
+      margin: 0 auto;
+      width: 960px;
+    }
+    #summary {
+      width: 960px;
+      margin-bottom: 20px;
+    }
+    #summary th {
+      background-color: skyblue;
+      padding: 5px 12px;
+    }
+    #summary td {
+      background-color: lightblue;
+       text-align: center; <!-- -->
+      padding: 4px 8px;
+      }
+    #details {
+      width: 960px;
+      margin-bottom: 20px;
+    }
+    #details th {
+      background-color: skyblue;
+      padding: 5px 12px;
+    }
+    #details td {
+      background-color: lightblue;
+       text-align: center; <!-- -->
+      padding: 4px 8px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>测试报告</h1>
+  <h2>汇总-7天内</h2>
+    <table id="summary" border="1" cellspacing="0">
+    <table class="table table-bordered" cellspacing="0" border="1" width="800px">
+    <tr>
+        <th bgcolor="skyblue">系统名称</th>
+        <th bgcolor="skyblue">用例数量</th>
+        <th bgcolor="skyblue">请求数量</th>
+        <th bgcolor="skyblue">成功数</th>
+        <th bgcolor="skyblue">失败数</th>
+        <th bgcolor="skyblue">成功率</th>
+        <th bgcolor="skyblue">执行耗时(s)</th>
+    </tr>
+        {% for t in m %}
+            <tr>
+                <td>所有系统</td>
+                <td>{{ t[0] }}</td>
+                <td>{{ t[1] }}</td>
+                <td>{{ t[2] }}</td>
+                <td>{{ t[3] }}</td>
+                <td>{{ t[4] }}%</td>
+                <td>{{ t[5] }}</td>
+            </tr>
+    {% endfor %}
+    </table>
+
+  <p></p>
+  <label>系统：<input type="text" placeholder="PSS-ESALES-PFS" id="sysObj" style="height:18px"></label>
+  <label>起始时间：<input type="text" placeholder="2018-01-01" id="startTime" style="height:18px"></label>
+  <label>终止时间：<input type="text" placeholder="2018-12-31" id="endTime" style="height:18px"></label>
+    <a href="javascript:;" ><button type="Search" id="searchBtn" style="height:23px"> 查找 </button></a>
+
+<h2>详细-7天内</h2>
+  <table id="details" border="1" cellspacing="0">
+    <table class="table table-bordered" cellspacing="0" border="1" width="800px">
+    <tr>
+        <th bgcolor="skyblue">系统名称</th>
+        <th bgcolor="skyblue">用例数量</th>
+        <th bgcolor="skyblue">请求数量</th>
+        <th bgcolor="skyblue">成功数</th>
+        <th bgcolor="skyblue">失败数</th>
+        <th bgcolor="skyblue">成功率</th>
+        <th bgcolor="skyblue">执行耗时(s)</th>
+        <th bgcolor="skyblue">日期</th>
+    </tr>
+        {% for i in n %}
+            <tr>
+                <td><a href="javascript:;" class="sysDetail" title="查询对应时间的执行情况"> {{ i[0] }} </a></td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+                <td>{{ i[4] }}</td>
+                <td><a class="Rate">{{ i[5] }}% </a></td>
+                <td>{{ i[6] }}</td>
+                <td><a class="choiceTime"> {{ i[7] }} </a></td>
+            </tr>
+    {% endfor %}
+    </table>
+
+    <script>
+        (function () {
+            var search = document.querySelector('#searchBtn')
+            search.addEventListener('click', function () {
+                var sysVal = document.querySelector('#sysObj').value,
+                    startTime = document.querySelector('#startTime').value,
+                    endTime = document.querySelector('#endTime').value,
+                    url = '/datasearch?System='+sysVal+'&Before='+startTime+'&After='+endTime
+
+                window.location.href = url
+
+            })
+
+             var searchsys = document.querySelectorAll('.sysDetail')
+             var choiceTime = document.querySelectorAll('.choiceTime')
+             for(var i = 0, len = searchsys.length; i < len; i ++) {
+                (function (i) {
+                    searchsys[i].addEventListener('click', function () {
+                    console.log(searchsys[i],choiceTime[i])
+                        var sysVal2 = searchsys[i].innerHTML.trim(),
+                            chTime = choiceTime[i].innerHTML.trim(),
+
+                            url = '/datasys?System='+sysVal2+'&Date='+chTime
+
+                        self.location.href  = url
+                    })
+                })(i)
+
+             }
+
+            function toPercent(point){
+            var str=Number(point*100).toFixed(1);
+            str+="%";
+            return str;
+            }
+
+        })()
+
+
+    </script>
+
+</html>
